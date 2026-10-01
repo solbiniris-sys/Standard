@@ -61,7 +61,7 @@ const fill = t => String(t).replaceAll('{N}', '나기').replaceAll('{J}', '준�
   });
 const withName = (t, k) => fill(String(t).replaceAll('{P}', NM[k]));
 
-const LOC = Object.fromEntries(Object.entries(D.loc).map(([k, v]) => [k, { n: v.n, ch: v.ch, a: v.a.map(a => [a[0], a[1], a[2], a[3]]) }]));
+const LOC = Object.fromEntries(Object.entries(D.loc).map(([k, v]) => [k, { n: v.n, ch: v.ch, a: v.a.map(a => [a[0], a[1], a[2], a[3], a[7] || 0]) }]));
 const wd = (r, l) => ['street', 'sea', 'river'].includes(l) && r.wx === '비' ? 1 : 0;
 const stg = b => D.stages.filter(x => b >= x[0]).length - 1;
 const lk = (r, k, o) => o[7] ? (o[7][0] === 'bond' ? r.bond < o[7][1] : r.p[k].st[o[7][0]] < o[7][1]) : false;
@@ -208,6 +208,7 @@ function onMessage(ws, raw) {
       const Lc = typeof m.l === 'string' && Object.hasOwn(D.loc, m.l) ? D.loc[m.l] : null;
       if (!Lc || (Lc.ch && !Lc.ch.includes(r.ch))) return;
       const a = Number.isInteger(m.i) ? Lc.a[m.i] : null; if (!a) return;
+      const g = a[7]; if (g && ((g.w && g.w !== me) || (g.c != null && r.ch < g.c) || (g.b && r.bond < g.b))) return; // 전용·성장 잠금
       if (a[1] !== 'rest' && p.en < a[3]) { add(r, 'sys', fill(`${NM[me]}은(는) 지쳐서 그 일을 할 수 없다.`)); break; }
       r.pick[me] = [m.l, m.i]; push(c); return resolve(c);
     }
