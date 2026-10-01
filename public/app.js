@@ -18,6 +18,7 @@ function go(role){const room=$('room').value.trim();if(!room)return;ROOM=room;PW
 /* 탭 */
 document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{tab=b.dataset.t;draw()});
 let openG='';function lf(t){lifeMark=S.log.length?S.log[S.log.length-1].i:0;send({type:t})}
+const gate=x=>{const m=x[4];if(!m)return'';if(m.w&&m.w!==me)return null;if(m.c!=null&&S.ch<m.c)return(m.c+1)+'장부터 열려요';if(m.b&&S.bond<m.b)return'유대 '+m.b+' 이상이 되면 열려요';return''};
 const tg=k=>{openG=openG===k?'':k;draw()};
 
 /* 능력치 분배 */
@@ -60,7 +61,7 @@ function draw(){
  if(!grp.some(g=>g[0]===openG))openG='';
  let pn='';
  if(openG==='plan')pn=`<div class="opn pd"><p class="hint"><b>자는 동안 능력치를 키워 주는 예약</b>이에요. 하나를 골라 두면 하루가 넘어갈 때마다 그 능력치의 경험이 +3 쌓여요. 행동력은 들지 않아요. 경험이 6 차면 능력치가 1 오르고(최대 12), 바꾸기 전까지 매일 적용돼요.</p><p class="hint">${mp.plan?`지금: <b>${mp.plan}</b> 단련 중 (다시 누르면 해제)`:'아직 정하지 않았어요'}</p><div class="pick">${S.stats.map(k=>{const v=mp.st[k],x=(mp.xp&&mp.xp[k])||0;return `<button class="${mp.plan===k?'on':''}" onclick="send({type:'plan',s:'${mp.plan===k?'':k}'})">${k} ${v}<small> ${v>=12?'최대':'경험 '+x+'/6'}</small></button>`}).join('')}</div></div>`;
- else if(openG)pn=`<div class="opn ls">${S.loc[openG].a.map((x,i)=>`<button onclick="send({type:'go',l:'${openG}',i:${i}});openG=''">${x[0]}<small>${x[1]==='rest'?'휴식 · 행동력 +'+x[3]:x[1]+' · 난이도 '+x[2]+' · 행동력 '+x[3]}</small></button>`).join('')}</div>`;
+ else if(openG)pn=`<div class="opn ls">${S.loc[openG].a.map((x,i)=>[x,i,gate(x)]).filter(t=>t[2]!==null).map(([x,i,g])=>`<button ${g?'disabled':''} onclick="send({type:'go',l:'${openG}',i:${i}});openG=''">${g?'🔒 ':''}${x[0]}${x[4]&&x[4].w?` <span class="tg">${S.names[x[4].w]} 전용</span>`:''}${!g&&x[4]&&(x[4].c!=null||x[4].b)?' <span class="tg nw">성장</span>':''}<small>${g||(x[1]==='rest'?'휴식 · 행동력 +'+x[3]:x[1]+' · 난이도 '+x[2]+' · 행동력 '+x[3])}</small></button>`).join('')}</div>`;
  $('jobs').innerHTML=e?'':`<p class="hint">소지금 ${mp.money}원${waiting?' · 선택 완료, 상대를 기다리는 중':''}${S.per>=3?' · 해가 졌어요. 하루를 넘겨 주세요':''}</p><div class="chips">${grp.map(g=>`<button class="chip ${openG===g[0]?'on':''}" onclick="tg('${g[0]}')">${g[1]}</button>`).join('')}</div>${pn||'<p class="hint mid">장소를 눌러 할 일을 골라 보세요</p>'}${waiting?`<button class="btn ghost choice" onclick="send({type:'cancel'})">선택 취소</button>`:''}<button class="btn choice" style="margin-top:14px" onclick="send({type:'sleep'})">${sl.includes(me)?'하루 넘기기 취소':'하루 넘기기'} (${sl.length}/${Object.keys(S.on).length||1})${S.day>S.len?'<small>이 장의 기간이 끝났어요</small>':''}</button>`;
 
  drawLife(mp,e,waiting);
