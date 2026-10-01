@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>같은 골목</title>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Noto+Sans+KR:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head><body>
+
+<div id="login" class="screen">
+  <p class="eyebrow">서나기 · 이준야</p>
+  <h1>같은 골목</h1>
+  <p class="sub">해산물이 오는 날부터, 졸업 그 이후까지.</p>
+  <input id="room" placeholder="세션 코드" autocomplete="off">
+  <input id="pw" type="password" placeholder="비밀번호 (4자 이상)">
+  <div class="row"><button class="btn" onclick="go('nagi')">서나기로 입장</button><button class="btn" onclick="go('junya')">이준야로 입장</button></div>
+</div>
+
+<div id="alloc" class="screen" hidden>
+  <p class="eyebrow">시작 전에</p>
+  <h2>능력치 분배</h2>
+  <p class="sub">모든 능력치는 2에서 시작해요. 남은 포인트를 나눠 주세요. (최대 8)</p>
+  <div id="ast"></div>
+  <select id="tr"></select><p class="left">남은 포인트 <b id="pl">14</b></p>
+  <button class="btn" id="aok" onclick="allocOk()">확정하기</button>
+</div>
+
+<div id="game" hidden>
+  <header>
+    <div><b id="chn"></b><span id="dt"></span></div>
+    <div class="hr"><span id="stg"></span><span class="bar"><i id="bond"></i></span><span id="en"></span></div>
+  </header>
+  <nav>
+    <button data-t="rp" class="on">역극<i></i></button>
+    <button data-t="act">행동<i></i></button>
+    <button data-t="ooc">잡담<i></i></button>
+    <button data-t="me">기록<i></i></button>
+  </nav>
+
+  <section id="p-rp" class="panel">
+    <div id="rplog" class="log"></div>
+    <div class="in"><select id="k"><option value="say">대사</option><option value="act">지문</option><option value="mind">속마음</option></select><input id="t" placeholder="장면을 이어가요" autocomplete="off"><button class="btn" onclick="say()">전송</button></div>
+  </section>
+
+  <section id="p-act" class="panel" hidden>
+    <div id="evbox"></div>
+    <div id="jobs"></div><div id="life"></div>
+  </section>
+
+  <section id="p-ooc" class="panel" hidden>
+    <p class="hint">오너끼리 잡담하는 방이에요. 역극 기록에는 남지 않아요.</p>
+    <div id="ooclog" class="log"></div>
+    <div class="in"><input id="o" placeholder="오너 잡담" autocomplete="off"><button class="btn" onclick="ooc()">전송</button></div>
+  </section>
+
+  <section id="p-me" class="panel" hidden>
+    <div id="side"></div>
+    <h3>상점</h3>
+    <div class="grid2"><button class="btn ghost" onclick="send({type:'gift'})">선물하기<small>30원 · 유대 +3 · 하루 1번</small></button><button class="btn ghost" onclick="send({type:'buy',k:'snack'})">간식<small>20원 · 행동력 +2</small></button><button class="btn ghost" onclick="send({type:'buy',k:'keep'})">기념품<small>60원 · 유대 +2 · 하루 1번</small></button><button class="btn ghost" onclick="send({type:'use'})">기억 조각 사용<small>5개 · 판정 +3</small></button></div>
+    <h3>일기장 (나만 보임)</h3>
+    <div class="in"><input id="dti" placeholder="오늘의 마음" autocomplete="off"><button class="btn" onclick="dia()">저장</button></div>
+    <div id="dr"></div>
+    <h3>앨범</h3><div id="al"></div>
+    <h3>주변 사람들</h3><div id="npc"></div>
+    <div class="grid2" style="margin-top:18px"><button class="btn ghost" id="vote" onclick="send({type:'vote'})"></button><button class="btn ghost" onclick="exp()">대화 내보내기</button></div>
+  </section>
+</div>
+
+<div id="dice" hidden>
+  <p id="dinfo"></p><div id="cube"></div>
+  <div id="dres" hidden><div id="dv"></div><div id="dn"></div><p id="dt2"></p><button class="btn ghost" onclick="skip()">넘기기</button> <button class="btn ghost" onclick="skipAll()">모두 넘기기</button></div>
+</div>
+<div id="recap" hidden></div>
+<script src="app.js"></script>
+</body></html>
