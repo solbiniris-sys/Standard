@@ -5,7 +5,7 @@
 // 장별 파일 작성법 (module.exports=(D,{M,m,o,patch})=>{ ... })
 //   M(누구,제목,지문,[선택지...],메타)  굵직한 사건(한 번만 나옴)
 //   m(누구,제목,지문,[선택지...],메타)  일반 사건(소진되면 재활용)
-//   o(라벨,능력치,난이도,성공문,실패문,성공시유대,실패시유대)
+//   o(라벨,능력치,난이도,성공문,실패문,성공시유대,실패시유대,잠금?)   잠금 예: ['용기',6] — 성장해야 열리는 선택지
 //   누구: 'b'=둘 중 아무나, 'n'=나기, 'j'=준야
 //   메타: { loc:'street|sea|river|pool|shop|school', b:[최소유대,최대유대], d:[최소일차], day:고정일차,
 //          need:['먼저 일어나야 하는 사건 제목'], once:1 }
@@ -19,8 +19,9 @@ module.exports = D => {
   };
   D.events = [[], [], [], []];
 
-  const o = (a, s, dc, t, f, b = 2, c = 0) => [a, s, dc, t, f, b, c];
+  const o = (a, s, dc, t, f, b = 2, c = 0, lock) => (lock ? [a, s, dc, t, f, b, c, lock] : [a, s, dc, t, f, b, c]); // lock: ['능력치',최소값] | ['bond',최소유대] | ['ch',최소장(0~3)]
   const add = (ch, maj, who, title, scene, opts, meta = {}) => {
+    if (D.events[ch].some(x => x.title === title)) { console.warn(`[content] 제목 중복, 건너뜀: ${ch + 1}장 '${title}'`); return null; }
     const e = { ch, maj: maj ? 1 : 0, who, title, scene, opts, ...meta };
     D.events[ch].push(e);
     return e;
@@ -69,7 +70,7 @@ module.exports = D => {
   L(3, '첫 요리 수업', { loc: 'shop' });
 
   // ── 장별 신규 파일 (ch1a, ch1b, ch2a ...) ──
-  for (let n = 1; n <= 4; n++) for (const s of 'abcdef') {
+  for (let n = 1; n <= 4; n++) for (const s of 'abcdefx') { // x = 성장·해금 추가분 (항상 마지막)
     const f = path.join(__dirname, `ch${n}${s}.js`);
     if (!fs.existsSync(f)) continue;
     const ch = n - 1;
