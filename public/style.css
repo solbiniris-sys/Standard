@@ -84,3 +84,5 @@ nav i{position:absolute;top:8px;margin-left:4px;width:7px;height:7px;border-radi
 .pop{display:inline-block;animation:pp .5s}
 @keyframes bb{50%{transform:translateY(5px)}}@keyframes dip{50%{transform:translateY(14px)}}
 @keyframes pp{40%{transform:scale(1.35)}}@keyframes bn{50%{transform:translateY(-4px)}}@keyframes shk{25%{transform:rotate(-8deg)}75%{transform:rotate(8deg)}}
+.tg{display:inline-block;margin-left:4px;padding:0 8px;font-size:11px;border-radius:10px;background:var(--card);color:var(--ac2);vertical-align:1px}.tg.nw{background:var(--deep);color:#fff}
+.opn.ls button:disabled{opacity:.5;cursor:default}.opn.ls button:disabled:hover{background:0}
