@@ -1,0 +1,55 @@
+:root{--bg:#0b1a22;--bg2:#10242e;--card:#153240;--line:#24485a;--tx:#dcedf3;--mu:#7da3b4;--ac:#7fc8dd;--ac2:#b5e6f1;--deep:#0d6783}
+*{box-sizing:border-box}[hidden]{display:none!important}
+html,body{height:100%;margin:0}
+body{background:radial-gradient(120% 70% at 50% -10%,#18405251,transparent 70%),var(--bg);color:var(--tx);font:15px/1.65 'Noto Sans KR',system-ui,sans-serif}
+h1,h2{font-family:'Gowun Batang',serif;font-weight:700;margin:.2em 0}h1{font-size:40px;letter-spacing:.2em}
+h3{font-size:12px;letter-spacing:.12em;color:var(--mu);font-weight:500;margin:26px 0 8px}
+input,select,button,textarea{font:inherit;color:inherit}
+input,select{background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:10px 13px;outline:0;min-width:0}
+input:focus,select:focus{border-color:var(--ac)}
+input,select{font-size:16px}
+.btn{background:var(--deep);border:0;border-radius:12px;padding:10px 16px;cursor:pointer;transition:.15s}
+.btn:hover{background:#12809f}.btn:disabled{opacity:.4;cursor:default}
+.btn.ghost{background:var(--bg2);border:1px solid var(--line)}.btn.ghost:hover{background:var(--card)}
+small{color:var(--mu);font-size:12px}.btn small{display:block}
+.screen{max-width:400px;margin:0 auto;padding:12vh 24px;text-align:center}
+.screen input{width:100%;margin:6px 0}.eyebrow{color:var(--ac);letter-spacing:.3em;font-size:12px}.sub{color:var(--mu);margin:0 0 26px}
+.row{display:flex;gap:8px;margin-top:10px}.row .btn{flex:1}
+#ast{text-align:left}.ar{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--line)}.ar span{flex:1}
+.ar button{width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:var(--bg2);cursor:pointer}.ar b{width:22px;text-align:center}
+.left{margin:16px 0}.left b{color:var(--ac2);font-size:20px}
+#game{height:100dvh;display:flex;flex-direction:column;max-width:780px;margin:0 auto}
+header{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 18px 8px;padding-top:calc(12px + env(safe-area-inset-top,0px));flex-wrap:wrap}
+header b{font-family:'Gowun Batang',serif;font-size:17px;margin-right:10px}header span{color:var(--mu);font-size:13px}
+.hr{display:flex;gap:10px;align-items:center}.bar{width:90px;height:6px;background:var(--card);border-radius:3px;overflow:hidden;display:inline-block}.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--deep),var(--ac2));width:0;transition:.5s}
+nav{display:flex;gap:4px;padding:0 14px;border-bottom:1px solid var(--line)}
+nav button{flex:1;background:0;border:0;border-bottom:2px solid transparent;color:var(--mu);padding:10px 0;cursor:pointer;position:relative}
+nav button.on{color:var(--ac2);border-color:var(--ac)}
+nav i{position:absolute;top:8px;margin-left:4px;width:7px;height:7px;border-radius:50%;background:var(--ac);display:none}nav i.d{display:inline-block}
+.panel{flex:1;overflow:auto;padding:14px 18px calc(14px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;min-height:0}
+#p-rp,#p-ooc{padding-bottom:0}
+.log{flex:1;overflow:auto;padding-bottom:10px}.in{display:flex;gap:6px;padding:10px 0 calc(10px + env(safe-area-inset-bottom,0px))}.in input{flex:1}
+.r{margin:12px 0;max-width:82%}.r.me{margin-left:auto;text-align:right}.r small{display:block;margin:0 6px 2px}
+.b{display:inline-block;text-align:left;background:var(--card);padding:9px 14px;border-radius:16px 16px 16px 4px;white-space:pre-wrap;font-family:'Gowun Batang',serif;font-size:16px}
+.r.me .b{background:var(--deep);border-radius:16px 16px 4px 16px}.b.mind{background:0;border:1px dashed var(--mu);color:var(--ac2);font-style:italic}
+.nar{margin:14px 0;color:var(--mu);font-family:'Gowun Batang',serif;text-align:center;white-space:pre-wrap}
+.sys{margin:16px auto;max-width:90%;padding:6px 14px;text-align:center;font-size:13px;color:var(--ac2);background:var(--bg2);border-radius:20px;white-space:pre-wrap}
+.gm{margin:14px 0;text-align:center;color:var(--mu);font-family:'Gowun Batang',serif;font-style:italic}.npc{margin:10px 0;text-align:center;color:var(--ac)}
+.roll{margin:12px 0;padding:10px 14px;border-left:3px solid var(--ac);background:var(--bg2);border-radius:0 12px 12px 0;font-size:14px;white-space:pre-wrap}.roll b{font-size:12px;color:var(--mu);font-weight:500}
+.evc{margin:18px 0;padding:14px 16px;border:1px solid var(--ac);border-radius:16px;background:linear-gradient(160deg,var(--card),var(--bg2));font-family:'Gowun Batang',serif;white-space:pre-wrap}.evc b{display:block;color:var(--ac2);font-size:17px;margin-bottom:4px}
+.card{background:var(--bg2);border:1px solid var(--line);border-radius:16px;padding:14px 16px;margin-bottom:10px}.card.off{opacity:.5}
+.st{display:flex;align-items:center;gap:10px;font-size:13px;margin:4px 0}.st span{width:38px;color:var(--mu)}.st .bar{flex:1;height:5px}.st em{font-style:normal;width:18px;text-align:right}
+.hint{color:var(--mu);font-size:13px;margin:0 0 6px}
+.choice{display:block;width:100%;text-align:left;margin:6px 0}.loc{margin:0 0 10px;border:1px solid var(--line);border-radius:16px;overflow:hidden}.loc>b{display:block;padding:10px 14px;background:var(--bg2);font-weight:500;color:var(--ac2)}
+.loc button{display:block;width:100%;text-align:left;background:0;border:0;border-top:1px solid var(--line);padding:10px 14px;cursor:pointer}.loc button:hover{background:var(--card)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.mem{padding:8px 0;border-bottom:1px solid var(--line);font-size:14px}
+#dice{position:fixed;inset:0;background:#06121ae6;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9;padding:20px;text-align:center}
+#dinfo{color:var(--ac);margin:0 0 18px}
+#cube{width:104px;height:104px;display:flex;align-items:center;justify-content:center;font:700 40px 'Gowun Batang',serif;border:2px solid var(--ac);border-radius:22px;background:var(--bg2);animation:sp .4s linear infinite}#cube.stop{animation:none;box-shadow:0 0 40px #7fc8dd55}
+@keyframes sp{to{transform:rotate(360deg) scale(1.08)}}
+#dres{max-width:420px}#dv{font:700 30px 'Gowun Batang',serif;letter-spacing:.2em;margin-top:16px;color:var(--ac2)}
+.v0 #dv{color:var(--mu)}.v1 #dv{color:#9bb8c4}.v3 #dv{color:#fff;text-shadow:0 0 18px var(--ac)}#dn{color:var(--mu);font-size:13px}#dt2{font-family:'Gowun Batang',serif;white-space:pre-wrap}
+#recap{position:fixed;left:50%;transform:translateX(-50%);bottom:90px;max-width:92%;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 16px;font-size:13px;z-index:8}
+
+.loc button:disabled{opacity:.45;cursor:default}
