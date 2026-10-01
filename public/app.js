@@ -17,6 +17,7 @@ function go(role){const room=$('room').value.trim();if(!room)return;ROOM=room;PW
 
 /* 탭 */
 document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{tab=b.dataset.t;draw()});
+let openG='';const tg=k=>{openG=openG===k?'':k;draw()};
 
 /* 능력치 분배 */
 function allocDraw(){const st=I.stats;$('ast').innerHTML=st.map(k=>`<div class="ar"><span>${k}</span><button onclick="al('${k}',-1)">−</button><b>${A.v[k]}</b><button onclick="al('${k}',1)">+</button></div>`).join('');$('pl').textContent=A.left;$('aok').disabled=A.left!==0}
@@ -53,9 +54,16 @@ function draw(){
  const e=S.evd,mineEv=e&&(e.who==='b'||e.who===me[0]),sl=S.sl||[];
  $('evbox').innerHTML=e?`<div class="evc"><b>${e.title}</b>${mineEv?e.c.map((c,i)=>`<button class="btn ghost choice" ${c[3]?'disabled':''} onclick="send({type:'pick',i:${i}})">${c[3]?'🔒 ':''}${c[0]}<small>${c[1]} · 난이도 ${c[2]}</small></button>`).join(''):'<small>상대가 선택할 차례예요. 그 사이 장면을 이어가 주세요.</small><button class="btn ghost choice" onclick="send({type:\'dismiss\'})">상대가 자리에 없어요 (넘기기 · 접속 중이면 10분 뒤)</button>'}</div>`:'';
  const waiting=S.pick[me];
- $('jobs').innerHTML=e?'':`<p class="hint">소지금 ${mp.money}원${waiting?' · 선택 완료, 상대를 기다리는 중':''}${S.per>=3?' · 해가 졌어요. 하루를 넘겨 주세요':''}</p>`+Object.entries(S.loc).filter(([k,v])=>!v.ch||v.ch.includes(S.ch)).map(([k,v])=>`<div class="loc"><b>${v.n}</b>${v.a.map((x,i)=>`<button onclick="send({type:'go',l:'${k}',i:${i}})">${x[0]}<small> ${x[1]==='rest'?'· 휴식':'· '+x[1]+' '+x[2]+' · 행동력 '+x[3]}</small></button>`).join('')}</div>`).join('')+(waiting?'<button class="btn ghost choice" onclick="send({type:\'cancel\'})">선택 취소</button>':'')+`<button class="btn choice" style="margin-top:14px" onclick="send({type:'sleep'})">${sl.includes(me)?'하루 넘기기 취소':'하루 넘기기'} (${sl.length}/${Object.keys(S.on).length||1})${S.day>S.len?'<small>이 장의 기간이 끝났어요</small>':''}</button>`;
-const iv=S.inv||{fish:0,crop:0,dish:0},cr=S.crop,rd=cr&&S.day-cr>=S.cd;
- $('life').innerHTML=e?'':`<h3>골목 살림</h3><p class="hint">물고기 ${iv.fish} · 채소 ${iv.crop} · 요리 ${iv.dish}</p><div class="grid2"><button class="btn ghost" onclick="send({type:'fish'})">낚시<small>행동력 1</small></button><button class="btn ghost" onclick="send({type:'farm'})">${!cr?'텃밭에 '+S.cn+' 심기':rd?S.cn+' 수확하기':S.cn+' 자라는 중 ('+(S.day-cr)+'/'+S.cd+'일)'}<small>행동력 1</small></button><button class="btn ghost" onclick="send({type:'cook'})">요리<small>물고기+채소</small></button><button class="btn ghost" onclick="send({type:'serve'})">요리 대접<small>유대 +2</small></button><button class="btn ghost" onclick="send({type:'sell'})">내다 팔기<small>물고기 12원 · 작물 8원</small></button><button class="btn ghost" onclick="send({type:'assist'})">상대 거들기<small>행동력 1 · 상대 판정 +2</small></button></div><h3>일과표 (하루가 넘어가면 반영)</h3><select onchange="send({type:'plan',s:this.value})"><option value="">정하지 않음</option>${S.stats.map(k=>`<option ${mp.plan===k?'selected':''}>${k}</option>`).join('')}</select>`;
+ const iv=S.inv||{fish:0,crop:0,dish:0},cr=S.crop,rd=cr&&S.day-cr>=S.cd,
+  locs=Object.entries(S.loc).filter(([k,v])=>!v.ch||v.ch.includes(S.ch)),
+  grp=[...locs.map(([k,v])=>[k,v.n]),['life','골목 살림'],['plan','일과표'+(mp.plan?' · '+mp.plan:'')]];
+ if(!grp.some(g=>g[0]===openG))openG='';
+ let pn='';
+ if(openG==='life')pn=`<div class="opn pd"><p class="hint">물고기 ${iv.fish} · 채소 ${iv.crop} · 요리 ${iv.dish}</p><div class="grid2"><button class="btn ghost" onclick="send({type:'fish'})">낚시<small>행동력 1</small></button><button class="btn ghost" onclick="send({type:'farm'})">${!cr?'텃밭에 '+S.cn+' 심기':rd?S.cn+' 수확하기':S.cn+' 자라는 중 ('+(S.day-cr)+'/'+S.cd+'일)'}<small>행동력 1</small></button><button class="btn ghost" onclick="send({type:'cook'})">요리<small>물고기+채소</small></button><button class="btn ghost" onclick="send({type:'serve'})">요리 대접<small>유대 +2</small></button><button class="btn ghost" onclick="send({type:'sell'})">내다 팔기<small>물고기 12원 · 작물 8원</small></button><button class="btn ghost" onclick="send({type:'assist'})">상대 거들기<small>행동력 1 · 상대 판정 +2</small></button></div></div>`;
+ else if(openG==='plan')pn=`<div class="opn pd"><p class="hint">하루가 넘어가면 반영돼요. 고른 항목을 다시 누르면 해제돼요.</p><div class="pick">${S.stats.map(k=>`<button class="${mp.plan===k?'on':''}" onclick="send({type:'plan',s:'${mp.plan===k?'':k}'})">${k}</button>`).join('')}</div></div>`;
+ else if(openG)pn=`<div class="opn ls">${S.loc[openG].a.map((x,i)=>`<button onclick="send({type:'go',l:'${openG}',i:${i}});openG=''">${x[0]}<small>${x[1]==='rest'?'휴식 · 행동력 +'+x[3]:x[1]+' · 난이도 '+x[2]+' · 행동력 '+x[3]}</small></button>`).join('')}</div>`;
+ $('jobs').innerHTML=e?'':`<p class="hint">소지금 ${mp.money}원${waiting?' · 선택 완료, 상대를 기다리는 중':''}${S.per>=3?' · 해가 졌어요. 하루를 넘겨 주세요':''}</p><div class="chips">${grp.map(g=>`<button class="chip ${openG===g[0]?'on':''}" onclick="tg('${g[0]}')">${g[1]}</button>`).join('')}</div>${pn||'<p class="hint mid">장소를 눌러 할 일을 골라 보세요</p>'}${waiting?`<button class="btn ghost choice" onclick="send({type:'cancel'})">선택 취소</button>`:''}<button class="btn choice" style="margin-top:14px" onclick="send({type:'sleep'})">${sl.includes(me)?'하루 넘기기 취소':'하루 넘기기'} (${sl.length}/${Object.keys(S.on).length||1})${S.day>S.len?'<small>이 장의 기간이 끝났어요</small>':''}</button>`;
+ $('life').innerHTML='';
  /* 기록 */
  $('side').innerHTML=['nagi','junya'].map(r=>`<div class="card ${S.on[r]?'':'off'}"><b>${S.names[r]}</b> <small>${S.p[r].money}원${S.p[r].boost?' · 다음 판정 +'+S.p[r].boost:''}</small>${S.stats.map(k=>`<div class="st"><span>${k}</span><span class="bar"><i style="width:${S.p[r].st[k]/12*100}%"></i></span><em>${S.p[r].st[k]}</em></div>`).join('')}</div>`).join('')+`<small>유대 ${S.bond} · 기억 조각 ${S.mem}</small>`;
  $('dr').innerHTML=S.diary.map((d,i)=>`<div class="mem">${esc(d)} <a href="#" style="color:var(--ac)" onclick="send({type:'reveal',i:${i}});return false">역극에 공개</a></div>`).join('')||'<small>아직 비어 있어요.</small>';
@@ -67,9 +75,15 @@ const iv=S.inv||{fish:0,crop:0,dish:0},cr=S.crop,rd=cr&&S.day-cr>=S.cd;
 const VC={'대성공':'v3','성공':'v2','실패':'v1','대실패':'v0'};
 function skip(){clearTimeout(tmo);nx()}
 function skipAll(){RQ.length=0;clearTimeout(tmo);nx()}
-function nx(){clearTimeout(tmo);const r=RQ.shift();
- if(!r){$('dice').hidden=true;busy=0;if(pend){S=Object.assign(pend.s,I);pend=null;draw()}return}
- busy=1;$('dice').hidden=false;$('dres').hidden=true;const c=$('cube');c.className='';$('dinfo').textContent=(I.names[r.who]||'')+' · '+r.title+' ('+r.stat+')';
- const iv=setInterval(()=>c.textContent=1+Math.floor(Math.random()*20),70);
- setTimeout(()=>{clearInterval(iv);c.className='stop';c.textContent=r.d},1200);
- setTimeout(()=>{const x=$('dres');x.hidden=false;x.className=VC[r.res]||'v2';$('dv').textContent=r.res;$('dn').textContent='d20 '+r.d+(r.mod?' + '+r.mod+' = '+(r.d+r.mod):'')+' · '+(r.lab||'난이도 '+r.dc);$('dt2').textContent=r.t;tmo=setTimeout(nx,3500)},1900)}
+let rv=null,shownAt=0;
+function nx(){clearTimeout(tmo);rv=null;const r=RQ.shift(),D=$('dice');
+ if(!r){D.hidden=true;D.classList.remove('rolling');busy=0;if(pend){S=Object.assign(pend.s,I);pend=null;draw()}return}
+ busy=1;D.hidden=false;D.classList.add('rolling');$('dres').hidden=true;$('dall').hidden=!RQ.length;const c=$('cube');c.className='';$('dinfo').textContent=(I.names[r.who]||'')+' · '+r.title+' ('+r.stat+')';
+ const iv=setInterval(()=>c.textContent=1+Math.floor(Math.random()*20),70);let t1,t2;
+ const show=()=>{rv=null;shownAt=Date.now();clearInterval(iv);clearTimeout(t1);clearTimeout(t2);D.classList.remove('rolling');c.className='stop';c.textContent=r.d;
+  const x=$('dres');x.hidden=false;x.className=VC[r.res]||'v2';$('dv').textContent=r.res;$('dn').textContent='d20 '+r.d+(r.mod?' + '+r.mod+' = '+(r.d+r.mod):'')+' · '+(r.lab||'난이도 '+r.dc);$('dt2').textContent=r.t;tmo=setTimeout(nx,3500)};
+ t1=setTimeout(()=>{clearInterval(iv);c.className='stop';c.textContent=r.d},1200);
+ t2=setTimeout(show,1900);rv=show}
+/* 굴리는 중에 누르면 바로 결과, 결과가 나온 뒤 누르면 다음으로 */
+$('dice').addEventListener('click',e=>{if(e.target.closest('button'))return;
+ if(rv)rv();else if(!$('dres').hidden&&Date.now()-shownAt>400)skip()});
